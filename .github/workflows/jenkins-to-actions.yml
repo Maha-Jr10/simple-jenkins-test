@@ -26,26 +26,28 @@ jobs:
           echo "Job Name: ${{ github.job }}"
           echo "Workspace: ${{ github.workspace }}"
 
-      # Step 3: System Info (like Jenkins System Info)
+      # Step 3: System Info (like Jenkins System Info) - FIXED
       - name: 💻 System Information
         run: |
           echo "==== WINDOWS SYSTEM INFO ===="
-          ver
+          # Option 1: Use cmd to run ver (FIX FOR THE ERROR)
+          cmd /c ver
+          
           echo "User: $env:USERNAME"
           echo "Computer: $env:COMPUTERNAME"
           echo "Processor Count: $env:NUMBER_OF_PROCESSORS"
           echo "Architecture: $env:PROCESSOR_ARCHITECTURE"
           
           # PowerShell for detailed system info
-          powershell -Command "Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version | Format-List"
+          Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version | Format-List
 
       # Step 4: Workspace Check (like Jenkins Workspace Check)
       - name: 📁 Workspace Contents
         run: |
           echo "==== WORKSPACE CONTENTS ===="
-          dir /B
+          Get-ChildItem | Select-Object Name
           echo "Workspace path: ${{ github.workspace }}"
-          dir
+          Get-ChildItem
 
       # Step 5: Git Test (like Jenkins Git Test)
       - name: 🔧 Git Information
@@ -57,7 +59,7 @@ jobs:
 
       # Step 6: Run Tests (like Jenkins Run Tests)
       - name: 🧪 Run Automated Tests
-        run: call test.bat
+        run: cmd /c test.bat  # Use cmd for batch files
 
       # Step 7: Success (like Jenkins Success)
       - name: ✅ Success
